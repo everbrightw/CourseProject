@@ -20,26 +20,28 @@ limitation = "cs" # only scrape cs courses
 
 curr_url = ''
 saved_course_page_count = 0;
-courses_queue = deque()
+courses_urls = []
+
+
 
 try:
     response = requests.get(UIUC_COURSE_WEB_TITLE)
     soup = BeautifulSoup(response.text, 'html.parser')
     print("enter websitte")
-    utils.find_all_target_courses(soup)
+    course_urls = utils.find_all_target_courses(soup)
 except Exception:
     pass
 
+#  start to scrape each website
+for course_url in course_urls:
 
-print(utils.is_target_course("https://courses.grainger.illinois.edu/cs498DL4/fa2020"))
-print(utils.is_target_course("1cs498"))
+    try:
+        response = requests.get(course_url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        print("Scraping a new course website: " + course_url)
 
-
-
-mylist = ['nowplaying', 'PBS', 'PBS', 'nowplaying', 'job', 'debate', 'thenandnow']
-myset = set(mylist)
-print(myset)
-
+    except Exception:
+        pass
 
 # while saved_course_page_count < number_of_courses_to_scrape:
 #     curr_url = pages_queue.popleft()

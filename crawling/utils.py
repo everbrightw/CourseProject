@@ -23,24 +23,21 @@ def is_lecture_slide_url(url: str) -> bool:
     return True
 
 def is_target_course(course_url):
+    # find onely cs courses
     pattern = "cs[0-4]"
-
     return bool(re.search(pattern, course_url.lower()))
 
 
 
 def find_all_target_courses(soup: BeautifulSoup) -> list:
+    # return a list of urls that we are going to scrape
     table = soup.find(id='table120208')
-    ret = []
     course_urls = []
+
     for ele in table.find_all("tr"):
-        ret.append(ele.find('td'))
 
         first_td = ele.find('td')
 
-        # if first_td:
-        #     # course title
-        #     print(first_td.text)
         course_url_container = ele.find('td', {'class': 'text-center'})
         if course_url_container:
             course_url = course_url_container.find('a')['href']
@@ -48,6 +45,4 @@ def find_all_target_courses(soup: BeautifulSoup) -> list:
                 course_urls.append(course_url)
 
 
-    # course_urls = list(set(course_urls))
-    for temp in course_urls:
-        print(temp)
+    return course_urls
