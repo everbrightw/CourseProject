@@ -1,3 +1,5 @@
+from bs4 import BeautifulSoup
+
 
 UIUC_COURSE_WEB_TITLE = "https://courses.grainger.illinois.edu"
 slides_elements = ['slides', 'slide', '.pdf']
@@ -13,3 +15,23 @@ def get_course_website(course_number, semester) -> str:
 def is_lecture_slide_url(url: str) -> bool:
     # TODO: find wheather the given url is lecture slide or not
     return True
+
+
+def find_all_target_courses(soup: BeautifulSoup) -> list:
+    # find all targetd courses url from uiuc grainger course websites
+    
+    table = soup.find(id='table120208')
+
+    course_urls = []
+    for ele in table.find_all("tr"):
+        ret.append(ele.find('td'))
+
+        first_td = ele.find('td')
+
+        # if first_td:
+        #     # course title
+        #     print(first_td.text)
+        course_url_container = ele.find('td', {'class': 'text-center'})
+        if course_url_container:
+            # the container is valid, add urls to courses
+            course_urls.append(course_url.find('a')['href'])
