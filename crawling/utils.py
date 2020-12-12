@@ -1,4 +1,6 @@
+
 UIUC_COURSE_WEB_TITLE = "https://courses.grainger.illinois.edu"
+slides_elements = ['slides', 'slide', '.pdf']
 
 def save_slides(url:str, path_name:str):
     urllib.request.urlretrieve(url, path_name)
