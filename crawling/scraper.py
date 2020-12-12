@@ -2,6 +2,7 @@ import time
 import json
 import requests
 import utils
+import re
 import urllib.request
 from bs4 import BeautifulSoup
 from collections import deque
@@ -20,20 +21,24 @@ limitation = "cs" # only scrape cs courses
 
 curr_url = ''
 saved_course_page_count = 0;
-courses_urls = []
+course_urls = {}
 
 
+
+
+
+# utils.save_slides("https://www.cs.colorado.edu/~martin/SLP/Updates/1.pdf", "cs458", "test.pdf")
 
 try:
     response = requests.get(UIUC_COURSE_WEB_TITLE)
     soup = BeautifulSoup(response.text, 'html.parser')
-    print("enter websitte")
+    print("enter website")
     course_urls = utils.find_all_target_courses(soup)
 except Exception:
     pass
 
 #  start to scrape each website
-for course_url in course_urls:
+for course_name, course_url in course_urls.items():
 
     try:
         response = requests.get(course_url)
@@ -42,23 +47,14 @@ for course_url in course_urls:
         print("Found following urls:")
         for a in soup.find_all('a', href=True):
             if utils.is_lecture_slide_url(a['href']):
-                print("Found the URL:", a['href'])
+                print("Found the URL:", utils.parse_url(course_url, a['href']))
+                # save slides to files
+                parsed_course_url = utils.parse_url(course_url, a['href'])
+                parsed_file_name = utils.parse_slide_name(parsed_course_url)
+        
+                # utils.save_slides(parsed_course_url, course_name, parsed_file_name)
         print("===================================================")
-    except Exception:
-        pass
 
-# while saved_course_page_count < number_of_courses_to_scrape:
-#     curr_url = pages_queue.popleft()
-#     try:
-#         response = requests.get(curr_url)
-#         soup = BeautifulSoup(response.text, 'html.parser')
-#     except Exception:
-#         pass
-#
-#     name_count = 1
-#     for test in soup.find_all('span', {'class': 'ti-write'}):
-#         slide_url = test.find_next_sibling()['href']
-#         path_name = slide_url.split("/")[-1]
-#         # utils.save_slides(UIUC_COURSE_WEB_TITLE + slide_url, path_name)
-#         name_count += 1
-#         print(UIUC_COURSE_WEB_TITLE + slide_url)
+    except Exception as e:
+        print(str(e))
+        pass
