@@ -20,8 +20,7 @@ def is_lecture_slide_url(url: str) -> bool:
     # TODO: find wheather the given url is lecture slide or not
     if url[-4:] != ".pdf" or "hw" in url.lower() or "homework" in url.lower() or "mp" in url.lower():
         return False
-    else:
-        return True
+    return True
 
 
 def find_all_target_courses(soup: BeautifulSoup) -> list:
