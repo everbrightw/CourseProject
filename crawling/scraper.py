@@ -31,7 +31,14 @@ except Exception:
     pass
 
 
+print(utils.is_target_course("https://courses.grainger.illinois.edu/cs498DL4/fa2020"))
+print(utils.is_target_course("1cs498"))
 
+
+
+mylist = ['nowplaying', 'PBS', 'PBS', 'nowplaying', 'job', 'debate', 'thenandnow']
+myset = set(mylist)
+print(myset)
 
 
 # while saved_course_page_count < number_of_courses_to_scrape:

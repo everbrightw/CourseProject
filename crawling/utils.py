@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-
+import re
 
 UIUC_COURSE_WEB_TITLE = "https://courses.grainger.illinois.edu"
 slides_elements = ['slides', 'slide', '.pdf']
@@ -16,12 +16,16 @@ def is_lecture_slide_url(url: str) -> bool:
     # TODO: find wheather the given url is lecture slide or not
     return True
 
+def is_target_course(course_url):
+    pattern = "cs[0-4]"
+
+    return bool(re.search(pattern, course_url.lower()))
+
+
 
 def find_all_target_courses(soup: BeautifulSoup) -> list:
-    # find all targetd courses url from uiuc grainger course websites
-    
     table = soup.find(id='table120208')
-
+    ret = []
     course_urls = []
     for ele in table.find_all("tr"):
         ret.append(ele.find('td'))
@@ -33,5 +37,11 @@ def find_all_target_courses(soup: BeautifulSoup) -> list:
         #     print(first_td.text)
         course_url_container = ele.find('td', {'class': 'text-center'})
         if course_url_container:
-            # the container is valid, add urls to courses
-            course_urls.append(course_url.find('a')['href'])
+            course_url = course_url_container.find('a')['href']
+            if is_target_course(course_url):
+                course_urls.append(course_url)
+
+
+    # course_urls = list(set(course_urls))
+    for temp in course_urls:
+        print(temp)
