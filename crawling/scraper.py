@@ -39,7 +39,11 @@ for course_url in course_urls:
         response = requests.get(course_url)
         soup = BeautifulSoup(response.text, 'html.parser')
         print("Scraping a new course website: " + course_url)
-
+        print("Found following urls:")
+        for a in soup.find_all('a', href=True):
+            if utils.is_lecture_slide_url(a['href']):
+                print("Found the URL:", a['href'])
+        print("===================================================")
     except Exception:
         pass
 
