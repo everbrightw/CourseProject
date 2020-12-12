@@ -1,30 +1,19 @@
 import time
 import json
 import requests
+import utils
 import urllib.request
 from bs4 import BeautifulSoup
 
-def save_slides(url:str, path_name:str):
-    urllib.request.urlretrieve(url, path_name)
+slides_elements = ['slides', 'slide', '.pdf']
+
+UIUC_COURSE_WEB_TITLE = "https://courses.grainger.illinois.edu"
+SEMESTER = "fa2020"
+target_courses = {}
+course = "cs357" # hardcode data
 
 
-
-def get_course_website(course_number, semester) -> str:
-    # The last part is hard coded right now for CS357 slides scraping
-    return uiuc_courseweb_url_title + "/" + course_number + "/" + semester + "/pages/resources.html"
-
-
-def is_lecture_slide_url(url: str) -> bool:
-    # TODO: find wheather the given url is lecture slide or not
-    return True
-
-
-course = "cs357"
-semester = "fa2020"
-
-uiuc_courseweb_url_title = "https://courses.grainger.illinois.edu"
-
-curr_url = get_course_website(course, semester)
+curr_url = utils.get_course_website(course, SEMESTER)
 
 try:
     response = requests.get(curr_url)
@@ -36,6 +25,6 @@ name_count = 1
 for test in soup.find_all('span', {'class': 'ti-write'}):
     slide_url = test.find_next_sibling()['href']
     path_name = slide_url.split("/")[-1]
-    # save_slides(uiuc_courseweb_url_title + slide_url, path_name)
+    # utils.save_slides(UIUC_COURSE_WEB_TITLE + slide_url, path_name)
     name_count += 1
-    print(uiuc_courseweb_url_title + slide_url)
+    print(UIUC_COURSE_WEB_TITLE + slide_url)
