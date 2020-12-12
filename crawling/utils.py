@@ -1,11 +1,15 @@
+import urllib
+
 from bs4 import BeautifulSoup
 
 
 UIUC_COURSE_WEB_TITLE = "https://courses.grainger.illinois.edu"
 slides_elements = ['slides', 'slide', '.pdf']
 
-def save_slides(url:str, path_name:str):
+
+def save_slides(url, path_name):
     urllib.request.urlretrieve(url, path_name)
+
 
 def get_course_website(course_number, semester) -> str:
     # The last part is hard coded right now for CS357 slides scraping
@@ -14,7 +18,10 @@ def get_course_website(course_number, semester) -> str:
 
 def is_lecture_slide_url(url: str) -> bool:
     # TODO: find wheather the given url is lecture slide or not
-    return True
+    if url[-4:] != ".pdf" or "hw" in url.lower() or "homework" in url.lower() or "mp" in url.lower():
+        return False
+    else:
+        return True
 
 
 def find_all_target_courses(soup: BeautifulSoup) -> list:
