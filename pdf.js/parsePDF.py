@@ -19,8 +19,10 @@ class ParsePDF:
 
     def parse(self):
         for folders in self.all_tar:
-            if folders == ".DS_Store":
+            if os.path.isdir(self.source_path + "/" + folders) is False:
                 continue
+            # if folders == ".DS_Store":
+            #     continue
             # create new folder for each class
             if os.path.isdir(self.tar_path + "cs-"+folders[-3:]) is False:
                 os.mkdir(self.tar_path + "cs-"+folders[-3:])
