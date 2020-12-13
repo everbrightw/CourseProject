@@ -1,14 +1,25 @@
 import urllib
-
+import os.path
 from bs4 import BeautifulSoup
 import re
 
 UIUC_COURSE_WEB_TITLE = "https://courses.grainger.illinois.edu"
 slides_elements = ['slides', 'slide', '.pdf']
 
+def parse_slide_name(url):
 
-def save_slides(url, path_name):
-    urllib.request.urlretrieve(url, path_name)
+    return url.rsplit('/', 1)[-1]
+
+
+
+def save_slides(url, course_name, file_name):
+    # make a final_directory named after the course name and save slides to it
+    current_directory = os.getcwd()
+    final_directory = os.path.join(current_directory, course_name)
+    if not os.path.exists(final_directory):
+       os.makedirs(final_directory)
+
+    urllib.request.urlretrieve(url, course_name + "/" + file_name)
 
 
 def get_course_website(course_number, semester) -> str:
@@ -27,22 +38,27 @@ def is_target_course(course_url):
     pattern = "cs[0-4]"
     return bool(re.search(pattern, course_url.lower()))
 
+def parse_url(title, url):
+    pattern = "http"
+    if bool(re.search(pattern, url.lower())):
+        return url.replace("..", "")
+    return (title + "/" +url).replace("..", "").replace("//", "/")
 
-
-def find_all_target_courses(soup: BeautifulSoup) -> list:
+def find_all_target_courses(soup: BeautifulSoup) -> dict:
     # return a list of urls that we are going to scrape
     table = soup.find(id='table120208')
-    course_urls = []
+    course_urls = {}
 
     for ele in table.find_all("tr"):
 
         first_td = ele.find('td')
 
         course_url_container = ele.find('td', {'class': 'text-center'})
+
         if course_url_container:
+            course_name = first_td.text # unwrapp td content
             course_url = course_url_container.find('a')['href']
             if is_target_course(course_url):
-                course_urls.append(course_url)
-
+                course_urls[course_name] = course_url
 
     return course_urls
