@@ -14,9 +14,15 @@ The following instructions have been tested with Python2.7 on Linux and MacOS
    
    Unzip the file and place the folder under `EducationalWeb/pdf.js/static/slides/`
    
-5. From `EducationalWeb/pdf.js/build/generic/web` , run the following command: `gulp server`
+5. Run `python scraper.py` from `CourseProject/crawling/` to scrape lecture slides from the website
 
-6. In another terminal window, run `python app.py` from `EducationalWeb/`
+6. Then run `python parsePDF` under `EducationalWeb/pdf.js/` to normalize the slides name and save one PDF into a folder with single slides.
 
-7. The site should be available at http://localhost:8096/
+7. Run `python getRelatedFiles.py` in `EducationalWeb/pdf.js/static` to get every single slide’s related slides with ranking scores
+
+8. From `EducationalWeb/pdf.js/build/generic/web` , run the following command: `gulp server`
+
+9. In another terminal window, run `python app.py` from `EducationalWeb/`
+
+10. The site should be available at http://localhost:8096/
 
