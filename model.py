@@ -148,8 +148,8 @@ def load_related_slides():
                     break
             name_comp = pdf_name.split('----')
             course_name = name_comp[0]
-            if course_name == 'cs-410':
-                continue
+            # if course_name == 'cs-410':
+            #     continue
             lec_name = '----'.join(name_comp[1:-1])
             if os.path.exists(os.path.join(slides_path, course_name, lec_name, pdf_name)):
                 related_dict[key].append(pdf_name)

@@ -21,21 +21,21 @@ class ParsePDF:
         for folders in self.all_tar:
 
             # create new folder for each class
-            if os.path.isdir(self.tar_path + folders) is False:
-                os.mkdir(self.tar_path + folders)
+            if os.path.isdir(self.tar_path + "cs-"+folders[-3:]) is False:
+                os.mkdir(self.tar_path + "cs-"+folders[-3:])
             ori_path = os.path.join(self.source_path, folders)
 
             for pdf in os.listdir(ori_path):
                 pdf_path = os.path.join(ori_path, pdf)
                 input_pdf = PdfFileReader(open(pdf_path, "rb"))
-                tar = os.path.join(self.tar_path, folders)
+                tar = os.path.join(self.tar_path, "cs-"+folders[-3:])
 
                 # truncate name
                 if pdf[-4:] == ".pdf":
                     pdf = pdf[:-4]
 
                 # create a folder for each to-be-parsed pdf
-                tar = os.path.join(tar, pdf)
+                tar = os.path.join(tar, pdf+".txt")
                 if os.path.isdir(tar) is False:
                     os.mkdir(tar)
 
@@ -44,7 +44,7 @@ class ParsePDF:
                     output = PdfFileWriter()
                     output.addPage(input_pdf.getPage(page))
 
-                    one_page = os.path.join(tar, "%s-page%d.pdf" % (pdf, page))
+                    one_page = os.path.join(tar, "cs-%s----%s.txt----slide%d.pdf" % (folders[-3:], pdf, page))
                     with open(one_page, "wb") as outputStream:
                         output.write(outputStream)
 

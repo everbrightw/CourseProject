@@ -19,7 +19,7 @@ target_courses = {} # save validated courses to scrape
 limitation = "cs" # only scrape cs courses
 
 curr_url = ''
-saved_course_page_count = 0;
+saved_course_page_count = 0
 courses_urls = []
 
 
