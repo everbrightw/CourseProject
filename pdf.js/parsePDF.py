@@ -1,5 +1,7 @@
 import os
 import sys
+import re
+import shutil
 
 from PyPDF2 import PdfFileWriter, PdfFileReader
 """
@@ -21,17 +23,27 @@ class ParsePDF:
         for folders in self.all_tar:
             if os.path.isdir(self.source_path + "/" + folders) is False:
                 continue
-            # if folders == ".DS_Store":
-            #     continue
+            if folders == ".DS_Store":
+                print(folders)
+                os.remove(self.source_path + "/" + folders)
+            course_name = "cs-" + re.findall(r'\d+', folders)[0]
+
             # create new folder for each class
-            if os.path.isdir(self.tar_path + "cs-"+folders[-3:]) is False:
-                os.mkdir(self.tar_path + "cs-"+folders[-3:])
+            if os.path.isdir(self.tar_path + course_name) is False:
+                os.mkdir(self.tar_path + course_name)
             ori_path = os.path.join(self.source_path, folders)
 
             for pdf in os.listdir(ori_path):
+                print(folders, pdf)
+
                 pdf_path = os.path.join(ori_path, pdf)
-                input_pdf = PdfFileReader(open(pdf_path, "rb"))
-                tar = os.path.join(self.tar_path, "cs-"+folders[-3:])
+                f = open(pdf_path, "rb")
+                try:
+                    input_pdf = PdfFileReader(f)
+                except Exception:
+                    print("error")
+                    continue
+                tar = os.path.join(self.tar_path, course_name)
 
                 # truncate name
                 if pdf[-4:] == ".pdf":
@@ -50,6 +62,15 @@ class ParsePDF:
                     one_page = os.path.join(tar, "cs-%s----%s.txt----slide%d.pdf" % (folders[-3:], pdf, page))
                     with open(one_page, "wb") as outputStream:
                         output.write(outputStream)
+                f.close()
+
+        for folders in self.tar_path:
+            tar = os.path.join(self.tar_path, folders)
+            if os.path.isdir(tar) is False:
+                continue
+            if os.path.getsize(tar) == 0:
+                print(tar)
+                shutil.rmtree(tar)
 
 
 if __name__ == '__main__':
