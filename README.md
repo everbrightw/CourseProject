@@ -1,5 +1,10 @@
 # EducationalWeb
 
+## video introduction
+https://youtu.be/rsyHiEcATLI
+
+## how to run
+
 The following instructions have been tested with Python2.7 on Linux and MacOS
 
 1. You should have ElasticSearch installed and running -- https://www.elastic.co/guide/en/elasticsearch/reference/current/targz.html
