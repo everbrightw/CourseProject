@@ -1,10 +1,12 @@
 import urllib
 import os.path
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, SoupStrainer
 import re
 
 UIUC_COURSE_WEB_TITLE = "https://courses.grainger.illinois.edu"
 slides_elements = ['slides', 'slide', '.pdf']
+key_words = ['slides', 'slide', 'lecture','lectures','note','notes','resources','resource', 'schedule']
+
 
 def parse_slide_name(url):
 
@@ -39,10 +41,36 @@ def is_target_course(course_url):
     return bool(re.search(pattern, course_url.lower()))
 
 def parse_url(title, url):
+
+    # if "https://" or "http://" in url:
+    #     return url
+
+    url = url.lower()
+    title = title.lower()
+
     pattern = "http"
+    pattern2 = ".html"
+
     if bool(re.search(pattern, url.lower())):
         return url.replace("..", "")
-    return (title + "/" +url).replace("..", "").replace("//", "/")
+    if bool(re.search(pattern2, title.lower())):
+        #if last is html rmove it
+        title = title[0:title.rindex('/')]
+
+
+    if title[-1] == '/':
+        title = title[:-1]  # remove last slash
+    if url[0] =='/': # remove second part first slash
+        url = url[1:]
+    if title.endswith('pages'):
+        #if last is html rmove it
+        title = title[:-5]
+    # remove similar part
+    i = 0
+    while not url.startswith(title[i:]):
+        i += 1
+
+    return (title[:i] + "/" +url).replace("..", "")
 
 def find_all_target_courses(soup: BeautifulSoup) -> dict:
     # return a list of urls that we are going to scrape
@@ -62,3 +90,15 @@ def find_all_target_courses(soup: BeautifulSoup) -> dict:
                 course_urls[course_name] = course_url
 
     return course_urls
+
+def find_slides_menu(soup, course_url):
+    # print(soup)
+    menu_potential_contain_slides = []
+    links = soup.find_all('a')
+    for link in links:
+        for key_word in key_words:
+            if key_word in link['href'].lower():
+                menu_potential_contain_slides.append(parse_url(course_url, link['href']))
+                # print(course_url + link['href'])
+
+    return list(set(menu_potential_contain_slides))
