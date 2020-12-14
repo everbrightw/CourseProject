@@ -20,7 +20,7 @@ def intersection(lst1, lst2):
 # Jaccard similarity
 def get_jaccard_sim(lst1, lst2):
     lst3 = intersection(lst1, lst2)
-    return float(len(lst3)) / (len(lst1) + len(lst2) - len(lst3))
+    return float(len(lst3)) / (len(lst1) + len(lst2) - len(lst3) + 0.1)
 
 
 for course in os.listdir(directory):
@@ -85,7 +85,7 @@ for key in dict:
     #https://www.geeksforgeeks.org/python-intersection-two-lists/
 #reference:https://medium.com/better-programming/how-to-convert-pdfs-into-searchable-key-words-with-python-85aab86c544f
 
-with open('ranking.csv', 'w', newline='') as file:
+with open('ranking.csv', 'w') as file:
     writer = csv.writer(file)
     for key in related_dict:
         writer.writerow(related_dict[key])
