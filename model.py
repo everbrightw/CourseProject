@@ -9,7 +9,12 @@ from ranker import *
 main_path = os.path.dirname(os.path.realpath(__file__))
 static_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static')
 slides_path = os.path.join(main_path, 'pdf.js/static/slides')
-related_slides_path = os.path.join(static_path, 'ranking_results.csv')
+
+related_slides_path = os.path.join(main_path, 'pdf.js/static/ranking.csv')
+
+#related_slides_path = os.path.join(static_path, 'ranking_results.csv')
+
+
 vocab_path = os.path.join(static_path, 'tf_idf_outputs', 'vocabulary_list.p')
 tfidfs_path = os.path.join(static_path, 'tf_idf_outputs', 'normalized_tfidfs.npy')
 title_tfidfs_path = os.path.join(static_path, 'tf_idf_outputs', 'normalized_title_tfidfs.npy')
@@ -18,11 +23,12 @@ paras_folder = os.path.join(main_path, 'para_idx_data')
 cfg = os.path.join(main_path, 'para_idx_data', 'config.toml')
 
 related_dict = {}
-slide_names = open(os.path.join(static_path, 'slide_names2.txt'), 'r').readlines()
+slide_names = open(os.path.join(main_path, 'pdf.js/static/slide_names.txt'), 'r').readlines()
+
 slide_names = [name.strip() for name in slide_names]
-slide_titles = io.open(os.path.join(static_path, 'slide_titles.txt'), 'r', encoding='utf-8').readlines()
-slide_titles = [t.strip() for t in slide_titles]
-title_mapping = dict(zip(slide_names, slide_titles))
+# slide_titles = io.open(os.path.join(static_path, 'slide_titles.txt'), 'r', encoding='utf-8').readlines()
+# slide_titles = [t.strip() for t in slide_titles]
+title_mapping = dict(zip(slide_names, slide_names))
 print('Building or loading index...')
 idx = metapy.index.make_inverted_index(cfg)
 mu = 2500
@@ -148,11 +154,14 @@ def load_related_slides():
                     break
             name_comp = pdf_name.split('----')
             course_name = name_comp[0]
-            if course_name == 'cs-410':
-                continue
+            # if course_name == 'cs-410':
+            #     continue
             lec_name = '----'.join(name_comp[1:-1])
-            if os.path.exists(os.path.join(slides_path, course_name, lec_name, pdf_name)):
-                related_dict[key].append(pdf_name)
+            # if os.path.exists(os.path.join(slides_path, course_name, lec_name, pdf_name)):
+            related_dict[key].append(pdf_name)
+    # print('=========')
+    # print(key)
+    # print(related_dict[key])
 
 
 def sort_slide_names(l):
