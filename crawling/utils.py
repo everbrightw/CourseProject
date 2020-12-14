@@ -16,12 +16,11 @@ def parse_slide_name(url):
 
 def save_slides(url, course_name, file_name):
     # make a final_directory named after the course name and save slides to it
-    current_directory = os.getcwd()
-    final_directory = os.path.join(current_directory, course_name)
+    final_directory = "../pdf.js/static/raw_slides/" + course_name
     if not os.path.exists(final_directory):
        os.makedirs(final_directory)
 
-    urllib.request.urlretrieve(url, course_name + "/" + file_name)
+    urllib.request.urlretrieve(url, final_directory + "/" + file_name)
 
 
 def get_course_website(course_number, semester) -> str:
