@@ -107,6 +107,7 @@ for course_name, course_urls in coure_urls_second_iteration.items():
         if ".pdf" in course_url:
             try:
                 parsed_file_name = utils.parse_slide_name(course_url)
+                print("Saving File:", parsed_file_name)
                 utils.save_slides(course_url, course_name, parsed_file_name)
             except Exception as e:
                 print(str(e))
